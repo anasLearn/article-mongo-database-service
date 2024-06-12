@@ -1,32 +1,8 @@
 import requests
+from .get_articles import get_latest_articles
 
-def get_latest_articles():
-    # Connect to article-scraper-service to get the latest articles
-    response = requests.get("http://article-scraper-service/latest_articles")
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return None
 
-def remove_duplicates(articles):
-    # Check and remove duplicates from the list of articles
-    unique_articles = []
-    seen_titles = set()
-    for article in articles:
-        # Check if the article title is not in the set of seen titles
-        if article['title'] not in seen_titles:
-            # Add the article title to the set of seen titles
-            seen_titles.add(article['title'])
-            # Check if the article does not exist in the database
-            if not article_exists_in_database(article):
-                unique_articles.append(article)
-    return unique_articles
 
-def article_exists_in_database(article):
-    # Check if the article exists in the database
-    # Your database checking logic here
-    # Return True if the article exists, False otherwise
-    pass
 
 def scrap_article(article):
     # Scrap an article using article-scraper-service
