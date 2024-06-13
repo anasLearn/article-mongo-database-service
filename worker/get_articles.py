@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 scraper_url = os.environ.get("SCRAPER_URL")
+get_articles_endpoint = os.environ.get("ARTICLES_LIST_ENDPOINT")
+scrap_article_endpoint = os.environ.get("SCRAP_ARTICLE_ENDPOINT")
 news_sources = json.loads(os.environ.get("NEWS_SOURCES"))
 
 
@@ -24,7 +26,7 @@ def get_latest_articles():
     # Connect to article-scraper-service to get the latest articles
     all_articles = {}
     for news_source in news_sources:
-        response = requests.get(f"{scraper_url}?source={news_source}")
+        response = requests.get(f"{scraper_url}/{get_articles_endpoint}?source={news_source}")
         if response.status_code == 200:
             articles_dict = dict(response.json())
             for source in articles_dict:
@@ -46,6 +48,19 @@ def get_latest_articles():
             pass
 
     return all_articles
+
+
+def scrap_article(article_url, news_source):
+    # Scrap an article using article-scraper-service
+    payload = {
+        "url": article_url
+    }
+    response = requests.post(f"{scraper_url}/{scrap_article_endpoint}?source={news_source}", json=payload)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        # TODO: logging and exception
+        return None
 
 
 if __name__ == "__main__":

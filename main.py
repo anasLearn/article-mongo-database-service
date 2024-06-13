@@ -4,8 +4,6 @@ from models import Topic, Article
 from models.location import Country, Region, City
 from models.newspaper import Newspaper
 
-
-
 # Connect to the MongoDB instance
 connect('dev-app-db', host='mongodb://localhost:27017/dev-db')
 

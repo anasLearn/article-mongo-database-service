@@ -7,10 +7,11 @@ from .location import Country, Region, City
 class Article(Document):
     meta = {'collection': 'articles'}
     url = URLField(required=True)
-    img = URLField()
+    img_url = URLField()
     timestamp = DateTimeField(required=True)
+    title = StringField()
     topics = ListField(ReferenceField(Topic), required=True)
-    country = ReferenceField(Country, required=True)
+    country = ReferenceField(Country, required=False)
     region = ReferenceField(Region, required=False)
     city = ReferenceField(City, required=False)
     source = ReferenceField(Newspaper, required=True)
