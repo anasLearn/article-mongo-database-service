@@ -1,9 +1,9 @@
 import os
 
-from mongoengine import connect
+from mongoengine import connect, DoesNotExist
 from dotenv import load_dotenv
 
-from models import Article
+from models import Article, Topic
 
 load_dotenv()
 db_server_url = os.environ.get("DB_SERVER_URL")
@@ -62,3 +62,41 @@ def write_to_database(article):
     # Your database writing logic here
     Article(**article).save()
     # TODO: Deal with the case of an exception
+
+
+def get_topic_by_name(topic_name):
+    """
+    Get a topic from the database by its name
+    if it doesn't exist create it
+    Args:
+        topic_name:
+
+    Returns:
+
+    """
+    try:
+        topic = Topic.objects.get(name=topic_name)
+
+    except DoesNotExist:
+        topic = Topic(name=topic_name).save()
+
+    return topic
+
+
+def get_topics_dict(topics: set):
+    """
+
+    Args:
+        topics:
+
+    Returns:
+        topics_dict = {
+            "topic_name": topic_document_object
+        }
+
+    """
+    topics_dict = {}
+    for topic_name in topics:
+        topics_dict[topic_name] = get_topic_by_name(topic_name)
+
+    return topics_dict

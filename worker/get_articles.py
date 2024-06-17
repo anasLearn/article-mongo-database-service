@@ -25,6 +25,7 @@ def get_latest_articles():
     """
     # Connect to article-scraper-service to get the latest articles
     all_articles = {}
+    all_topics = set()
     for news_source in news_sources:
         response = requests.get(f"{scraper_url}/{get_articles_endpoint}?source={news_source}")
         if response.status_code == 200:
@@ -42,12 +43,13 @@ def get_latest_articles():
                                 "source": source,
                                 "topics": {topic}
                             }
+                    all_topics.add(topic.lower().strip())
 
         else:
             # TODO: log the problem and raise an exception if needed
             pass
 
-    return all_articles
+    return all_articles, all_topics
 
 
 def scrap_article(article_url, news_source):
