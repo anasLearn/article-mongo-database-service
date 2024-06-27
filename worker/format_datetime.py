@@ -11,7 +11,7 @@ def format_timestamp(datetime_str):
 
     # Calculate the timezone offset
     tz_offset = timedelta(hours=tz_hours, minutes=tz_minutes)
-    if tz_sign == '-':
+    if tz_sign == "-":
         tz_offset = -tz_offset
 
     # Add the timezone info to the datetime object

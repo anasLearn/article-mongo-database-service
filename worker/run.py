@@ -32,13 +32,13 @@ def run_worker_routine():
                 if summary:
                     # Format the article data
                     formatted_article = {
-                        'url': article_url,
-                        'img_url': img_url,
-                        'timestamp': timestamp,
-                        'title': title,
-                        'topics': topics,
-                        'source': news_source,
-                        'summary': summary
+                        "url": article_url,
+                        "img_url": img_url,
+                        "timestamp": timestamp,
+                        "title": title,
+                        "topics": topics,
+                        "source": news_source,
+                        "summary": summary,
                     }
                     # Write to the database
                     write_to_database(formatted_article)

@@ -5,7 +5,7 @@ from models.location import Country, Region, City
 from models.newspaper import Newspaper
 
 # Connect to the MongoDB instance
-connect('dev-app-db', host='mongodb://localhost:27017/dev-db')
+connect("dev-app-db", host="mongodb://localhost:27017/dev-db")
 
 # Example usage
 if __name__ == "__main__":
@@ -43,7 +43,7 @@ if __name__ == "__main__":
         country=country,
         source=newspaper,
         summary="This is a summary of the article.",
-        timestamp=datetime.now()
+        timestamp=datetime.now(),
     )
     article.save()
 

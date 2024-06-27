@@ -27,7 +27,9 @@ def get_latest_articles():
     all_articles = {}
     all_topics = set()
     for news_source in news_sources:
-        response = requests.get(f"{scraper_url}/{get_articles_endpoint}?source={news_source}")
+        response = requests.get(
+            f"{scraper_url}/{get_articles_endpoint}?source={news_source}"
+        )
         if response.status_code == 200:
             articles_dict = dict(response.json())
             for source in articles_dict:
@@ -41,7 +43,7 @@ def get_latest_articles():
                             all_articles[article_url] = {
                                 "img_url": article_img_url,
                                 "source": source,
-                                "topics": {topic}
+                                "topics": {topic},
                             }
                     all_topics.add(topic.lower().strip())
 
@@ -54,10 +56,11 @@ def get_latest_articles():
 
 def scrap_article(article_url, news_source):
     # Scrap an article using article-scraper-service
-    payload = {
-        "url": article_url
-    }
-    response = requests.post(f"{scraper_url}/{scrap_article_endpoint}?source={news_source}", json=payload)
+    payload = {"url": article_url}
+    response = requests.post(
+        f"{scraper_url}/{scrap_article_endpoint}?source={news_source}&url={article_url}",
+        json=payload,
+    )
     if response.status_code == 200:
         return response.json()
     else:
@@ -67,4 +70,5 @@ def scrap_article(article_url, news_source):
 
 if __name__ == "__main__":
     from pprint import pprint
+
     pprint(get_latest_articles())

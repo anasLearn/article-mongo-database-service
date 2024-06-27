@@ -10,7 +10,7 @@ db_server_url = os.environ.get("DB_SERVER_URL")
 db_name = os.environ.get("DB_NAME")
 
 # Connect to the MongoDB instance
-connect(db_name, host=f'{db_server_url}/{db_name}')
+connect(db_name, host=f"{db_server_url}/{db_name}")
 
 
 def remove_db_duplicates(articles) -> list:
