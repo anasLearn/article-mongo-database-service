@@ -1,6 +1,6 @@
 # Critical:
 
-* Put the requests.get in `try - except` blocks
+* Put the `requests.get` in `try - except` blocks
 
 # Other:
 
