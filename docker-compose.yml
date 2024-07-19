@@ -6,5 +6,16 @@ services:
       - "27017:27017"
     volumes:
       - mongodbdata:/data/db
+
+  dbeaver:
+    image: dbeaver/cloudbeaver:latest
+    container_name: dbeaver
+    ports:
+      - "8080:8978"
+    environment:
+      - CB_DB_URL=mongodb://article_mongo_database:27017
+    depends_on:
+      - mongodb
+
 volumes:
   mongodbdata:
