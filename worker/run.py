@@ -1,4 +1,4 @@
-from worker.get_articles import get_latest_articles, scrap_article
+from worker.get_articles import get_latest_articles, get_scraped_article
 from worker.db_utils import remove_db_duplicates, write_to_database, get_topics_dict
 from worker.summarize_article import summarize_article
 from worker.format_datetime import format_timestamp
@@ -15,7 +15,7 @@ def run_worker_routine():
         for article_url in unique_articles:
             # Scrap each article
             news_source = scraped_articles[article_url]["source"]
-            scraped_article = scrap_article(article_url, news_source)
+            scraped_article = get_scraped_article(article_url, news_source)
             if scraped_article:
                 title = scraped_article["article_title"]
                 intro = scraped_article["article_introduction"]
@@ -42,6 +42,8 @@ def run_worker_routine():
                     }
                     # Write to the database
                     write_to_database(formatted_article)
+
+        return "Database update completed"
     else:
         # TODO: logging and exception
         # print("Failed to fetch latest articles")

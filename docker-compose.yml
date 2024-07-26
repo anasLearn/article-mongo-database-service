@@ -7,15 +7,17 @@ services:
     volumes:
       - mongodbdata:/data/db
 
-  dbeaver:
-    image: dbeaver/cloudbeaver:latest
-    container_name: dbeaver
+  redis:
+    image: redis:latest
+    container_name: redis-server
     ports:
-      - "8080:8978"
-    environment:
-      - CB_DB_URL=mongodb://article_mongo_database:27017
-    depends_on:
-      - mongodb
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+
 
 volumes:
   mongodbdata:
+  redis-data:
+

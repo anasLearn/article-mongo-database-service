@@ -13,8 +13,10 @@ news_sources = json.loads(os.environ.get("NEWS_SOURCES"))
 
 def get_latest_articles():
     """
+    Connect to article-scraper-service to get the latest articles
 
     :return:
+        A tuple (all_articles. all_topics)
         all_articles = {
             "article_url": {
                 "img_url: "...",
@@ -22,8 +24,9 @@ def get_latest_articles():
                 "topics": {"topic_1", "topic_2"}
             }
         }
+        all_topics: a set of the topics from the articles that were scraped
     """
-    # Connect to article-scraper-service to get the latest articles
+
     all_articles = {}
     all_topics = set()
     for news_source in news_sources:
@@ -54,7 +57,16 @@ def get_latest_articles():
     return all_articles, all_topics
 
 
-def scrap_article(article_url, news_source):
+def get_scraped_article(article_url, news_source):
+    """
+
+    Args:
+        article_url:
+        news_source:
+
+    Returns:
+
+    """
     # Scrap an article using article-scraper-service
     payload = {"url": article_url}
     response = requests.post(

@@ -1,6 +1,7 @@
 # Critical:
 
 * Put the `requests.get` in `try - except` blocks
+* Manage the exceptions when the articles scraper and the article summarizer are offline.
 
 # Other:
 
