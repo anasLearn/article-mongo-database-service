@@ -2,6 +2,7 @@
 
 * Put the `requests.get` in `try - except` blocks
 * Manage the exceptions when the articles scraper and the article summarizer are offline.
+* each article must have the source as a Reference to the collection NewsPaper instead of a str
 
 # Other:
 

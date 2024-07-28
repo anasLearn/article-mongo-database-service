@@ -21,7 +21,8 @@ class Article(Document):
     country = ReferenceField(Country, required=False)
     region = ReferenceField(Region, required=False)
     city = ReferenceField(City, required=False)
-    source = ReferenceField(Newspaper, required=True)
+    # source = ReferenceField(Newspaper, required=True)
+    source = StringField()
     summary = StringField()
 
     # Define indexes

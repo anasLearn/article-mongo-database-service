@@ -9,7 +9,7 @@ from redis import Redis
 
 from worker.db_utils import get_100_articles_from_db
 from worker.run import run_worker_routine
-from models.pydantic_models import ArticleModel
+from models.pydantic_models import ArticleModel, convert_article_to_pydantic
 
 import logging
 
@@ -55,20 +55,24 @@ def update_db():
 @app.get("/get-100-articles/", response_model=List[ArticleModel])
 def get_100_articles(page: int = 1):
     # Check if articles are cached in Redis
-    cache_key = f"articles_page_{page}"
-    cached_articles = redis_client.get(cache_key)
-
-    if cached_articles:
-        return json.loads(cached_articles)
+    # cache_key = f"articles_page_{page}"
+    # cached_articles = redis_client.get(cache_key)
+    #
+    # if cached_articles:
+    #     return json.loads(cached_articles)
 
     try:
         articles = get_100_articles_from_db(page)
 
+        articles_list = []
+        for article in articles:
+            articles_list.append(convert_article_to_pydantic(article))
+
         # Serialize and cache the articles
-        articles_list = [ArticleModel.model_validate(article) for article in articles]
-        redis_client.set(
-            cache_key, json.dumps([article.dict() for article in articles_list]), ex=3600
-        )  # Cache for 1 hour
+        # articles_list = [ArticleModel.model_validate(article) for article in articles]
+        # redis_client.set(
+        #     cache_key, json.dumps([article.dict() for article in articles_list]), ex=3600
+        # )  # Cache for 1 hour
 
         return articles_list
 
