@@ -3,8 +3,6 @@ from typing import List, Optional
 from datetime import datetime
 
 
-
-
 # Corresponding Pydantic model for Article
 class ArticleModel(BaseModel):
     url: AnyUrl
@@ -28,9 +26,9 @@ def convert_article_to_pydantic(article):
         title=article.title,
         topics=[topic.name for topic in article.topics],
         country=article.country.name if article.country else None,
-        region=article.region.name  if article.region else None,
+        region=article.region.name if article.region else None,
         city=article.city.name if article.city else None,
         # TODO: # source=NewspaperModel(id=str(article.source.id), name=article.source.name, root_url=article.source.root_url),
         source=article.source,
-        summary=article.summary
+        summary=article.summary,
     )
