@@ -5,11 +5,16 @@ from typing import List
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 import uvicorn
-from redis import Redis
+from redis.asyncio import Redis
+import redis.exceptions as redis_exceptions
 
 from worker.db_utils import get_100_articles_from_db
 from worker.run import run_worker_routine
-from models.pydantic_models import ArticleModel, convert_article_to_pydantic
+from models.pydantic_models import (
+    ArticleModel,
+    convert_article_to_pydantic,
+    custom_serializer,
+)
 
 import logging
 
@@ -53,23 +58,39 @@ def update_db():
 
 # Fetch articles with pagination
 @app.get("/get-100-articles/", response_model=List[ArticleModel])
-def get_100_articles(page: int = 1):
-    # Check if articles are cached in Redis
-    cache_key = f"articles_page_{page}"
-    cached_articles = redis_client.get(cache_key)
+async def get_100_articles(page: int = 1):
+    try:
+        # Check if articles are cached in Redis
+        cache_key = f"articles_page_{page}"
+        cached_articles = await redis_client.get(cache_key)  # Await the Redis operation
 
-    if cached_articles:
-        return json.loads(cached_articles)
+        if cached_articles:
+            return json.loads(cached_articles)
+
+    except redis_exceptions.ConnectionError:
+        logging.error("Redis connection error.")
+        raise HTTPException(status_code=500, detail="Error connecting to Redis.")
+
+    except redis_exceptions.TimeoutError:
+        logging.error("Redis timeout error.")
+        raise HTTPException(status_code=500, detail="Redis request timed out.")
+
+    except redis_exceptions.RedisError as e:
+        logging.error(f"Redis error: {e}")
+        raise HTTPException(status_code=500, detail="Error interacting with Redis.")
 
     try:
         articles = get_100_articles_from_db(page)
 
         # Serialize and cache the articles
         articles_list = [convert_article_to_pydantic(article) for article in articles]
-        redis_client.set(
-        #     cache_key, json.dumps([article.dict() for article in articles_list]), ex=3600
-            cache_key, json.dumps(articles_list), ex=3600
-        )  # Cache for 1 hour
+        await redis_client.set(
+            cache_key,
+            json.dumps(
+                [article.dict() for article in articles_list], default=custom_serializer
+            ),
+            ex=3600,  # Cache for 1 hour
+        )
 
         return articles_list
 

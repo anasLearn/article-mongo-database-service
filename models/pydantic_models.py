@@ -34,23 +34,10 @@ def convert_article_to_pydantic(article):
     )
 
 
-if __name__ == "__main__":
-    # Create an instance of ArticleModel
-    article = ArticleModel(
-        url="https://example.com/article",
-        img_url="https://example.com/image.jpg",
-        timestamp=datetime.now(),
-        title="Example Article",
-        topics=["topic1", "topic2"],
-        country="Example Country",
-        region="Example Region",
-        city="Example City",
-        source="Example Source",
-        summary="This is an example summary."
-    )
-
-    # Transform the object to a dictionary
-    article_dict = article.dict()
-
-    # Print the dictionary
-    print(article_dict)
+# Custom serialization function
+def custom_serializer(obj):
+    if isinstance(obj, datetime):
+        return obj.isoformat()
+    if isinstance(obj, AnyUrl):
+        return str(obj)
+    raise TypeError("Type not serializable")
