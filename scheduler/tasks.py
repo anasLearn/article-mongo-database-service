@@ -17,9 +17,11 @@ def run_worker():
 
 # Schedule the task to run every 4 hours
 app.conf.beat_schedule = {
-    'run-worker-every-4-hours': {
-        'task': 'scheduler.tasks.run_worker',
-        'schedule': crontab(minute=0, hour='*/4'),  # Run at minute 0 of every 4th hour (0, 4, 8, 12, 16, 20)
+    "run-worker-every-4-hours": {
+        "task": "scheduler.tasks.run_worker",
+        "schedule": crontab(
+            minute=0, hour="*/4"
+        ),  # Run at minute 0 of every 4th hour (0, 4, 8, 12, 16, 20)
     },
 }
 

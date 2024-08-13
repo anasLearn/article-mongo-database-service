@@ -27,3 +27,4 @@
 * clear the redis cache after updating the database
 * Make an endpoint for the topics
 * Remove the possibility to update the database with the API. or at least secure it.
+* Does Redis container even need a volume?
