@@ -26,3 +26,4 @@
   * The objective is that only one client can update the redis cache with only one access to the database.
 * clear the redis cache after updating the database
 * Make an endpoint for the topics
+* Remove the possibility to update the database with the API. or at least secure it.

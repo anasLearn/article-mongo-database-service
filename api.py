@@ -8,8 +8,8 @@ import uvicorn
 from redis.asyncio import Redis
 import redis.exceptions as redis_exceptions
 
-from worker.db_utils import get_100_articles_from_db
-from worker.run import run_worker_routine
+from scheduler.worker_routine import run_worker_routine
+from utils.db_utils import get_100_articles_from_db
 from models.pydantic_models import (
     ArticleModel,
     convert_article_to_pydantic,
@@ -25,7 +25,7 @@ PORT = int(os.environ.get("PORT", "5030"))
 
 
 # Initialize Redis connection
-redis_client = Redis(host="localhost", port=6379, db=0)
+redis_client = Redis(host="localhost", port=6379, db=7)
 
 
 @app.get("/ping")

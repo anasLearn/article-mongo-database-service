@@ -1,0 +1,10 @@
+.idea/
+venv/
+.gitignore
+.git/
+.gitlab-ci.yml
+LICENSE
+.env
+example.env
+*.md
+celerybeat-schedule

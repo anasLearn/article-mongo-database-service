@@ -1,7 +1,7 @@
-from worker.get_articles import get_latest_articles, get_scraped_article
-from worker.db_utils import remove_db_duplicates, write_to_database, get_topics_dict
-from worker.summarize_article import summarize_article
-from worker.format_datetime import format_timestamp
+from utils.get_articles import get_latest_articles, get_scraped_article
+from utils.db_utils import remove_db_duplicates, write_to_database, get_topics_dict
+from utils.summarize_article import summarize_article
+from utils.format_datetime import format_timestamp
 
 
 def run_worker_routine():

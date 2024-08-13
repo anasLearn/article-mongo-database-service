@@ -5,10 +5,14 @@ from dotenv import load_dotenv
 load_dotenv()
 summarizer_address = os.environ.get("SUMMARIZER_URL")
 summarize_endpoint = os.environ.get("SUMMARIZE_ENDPOINT")
+SAMPLE_SUMMARY = not (
+    "false" == os.environ.get("SAMPLE_SUMMARY", default="true").lower().strip()
+)
 
 
 def summarize_article(content):
-    return "zft"
+    if SAMPLE_SUMMARY:
+        return "A sample summary"
     # Summarize an article using article-summary-service
     response = requests.post(
         f"{summarizer_address}/{summarize_endpoint}", json={"content": content}

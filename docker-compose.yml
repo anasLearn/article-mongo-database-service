@@ -1,21 +1,47 @@
 services:
   mongodb:
     image: mongo
-    container_name: article_mongo_database
+    container_name: article-mongo-database-container
     ports:
       - "27017:27017"
     volumes:
       - mongodbdata:/data/db
 
   redis:
-    image: redis:latest
-    container_name: redis-server
+    image: redis
+    container_name: redis-server-container
     ports:
       - "6379:6379"
     volumes:
       - redis-data:/data
     restart: unless-stopped
 
+  celery:
+    image: db-handler-fastapi-image
+    container_name: celery-worker-container
+    working_dir: /app
+    volumes:
+      - .:/app  # Mount the project directory into the container
+    command: celery -A scheduler.tasks worker --beat --concurrency=1 --pool=solo
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      args:
+        HOST: ${HOST}
+        PORT: ${PORT}
+    image: db-handler-fastapi-image
+    container_name: db-handler-fastapi-container
+    env_file:
+      - .env
+    ports:
+      - "${PORT}:${PORT}"
+    depends_on:
+      - mongodb
+      - redis
 
 volumes:
   mongodbdata:
