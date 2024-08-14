@@ -3,11 +3,11 @@ from celery.schedules import crontab
 import requests
 import logging
 
-from globals import HOST, PORT, UPDATE_DB_ENDPOINT
+from globals import HOST, PORT, UPDATE_DB_ENDPOINT, REDIS_HOST, REDIS_PORT
 
 
 # Create Celery instance
-app = Celery("tasks", broker="redis://redis:6379/0", backend="redis://redis:6379/1")
+app = Celery("tasks", broker=f"redis://{REDIS_HOST}:{REDIS_PORT}/0", backend=f"redis://{REDIS_HOST}:{REDIS_PORT}/1")
 
 
 @app.task
@@ -20,21 +20,29 @@ def run_worker():
         logging.error("DB Update Error.")
 
 
-# Schedule the task to run every 4 hours
+# # Schedule the task to run every 4 hours
+# app.conf.beat_schedule = {
+#     "run-worker-every-4-hours": {
+#         "task": "celery-scheduler.tasks.run_worker",
+#         "schedule": crontab(
+#             minute=0, hour="*/4"
+#         ),  # Run at minute 0 of every 4th hour (0, 4, 8, 12, 16, 20)
+#     },
+# }
+
+# Schedule the task to run every 2 minutes
 app.conf.beat_schedule = {
-    "run-worker-every-4-hours": {
-        "task": "celery-scheduler.tasks.run_worker",
-        "schedule": crontab(
-            minute=0, hour="*/4"
-        ),  # Run at minute 0 of every 4th hour (0, 4, 8, 12, 16, 20)
+    'run-worker-every-2-minutes': {
+        'task': 'celery-scheduler.tasks.run_worker',
+        'schedule': crontab(minute='*/2'),  # Run at minute 0, 2, 4, 6, etc. of every hour
     },
 }
 
-# # Schedule the task to run every 2 minutes
+# # Schedule the task to run every 5 minutes
 # app.conf.beat_schedule = {
-#     'run-worker-every-2-minutes': {
+#     'run-worker-every-5-minutes': {
 #         'task': 'celery-scheduler.tasks.run_worker',
-#         'schedule': crontab(minute='*/2'),  # Run at minute 0, 2, 4, 6, etc. of every hour
+#         'schedule': crontab(minute='*/5'),  # Run at minute 0, 5, 10, 15, etc. of every hour
 #     },
 # }
 

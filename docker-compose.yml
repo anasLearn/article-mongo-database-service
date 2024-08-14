@@ -2,19 +2,18 @@ services:
   mongodb:
     image: mongo
     container_name: article-mongo-database-container
-    ports:
-      - "27017:27017"
     volumes:
       - mongodbdata:/data/db
       - mongodbconfig:/data/configdb
+    network_mode: "service:api"
+    restart: unless-stopped
 
   redis:
     image: redis
     container_name: redis-server-container
-    ports:
-      - "6379:6379"
     volumes:
       - redis-data:/data
+    network_mode: "service:api"
     restart: unless-stopped
 
   celery:
@@ -44,6 +43,7 @@ services:
       - .env
     ports:
       - "${PORT}:${PORT}"
+      - "27017:27017"
     depends_on:
       - mongodb
       - redis

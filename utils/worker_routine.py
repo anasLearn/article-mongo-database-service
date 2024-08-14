@@ -17,6 +17,7 @@ def run_worker_routine():
             # iterator += 1
             # if iterator == 5:
             #     break
+            
             # Scrap each article
             news_source = scraped_articles[article_url]["source"]
             scraped_article = get_scraped_article(article_url, news_source)

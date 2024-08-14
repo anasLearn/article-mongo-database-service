@@ -15,12 +15,12 @@ from models.pydantic_models import (
 
 import logging
 
-from globals import HOST, PORT, UPDATE_DB_ENDPOINT
+from globals import HOST, PORT, UPDATE_DB_ENDPOINT, REDIS_HOST, REDIS_PORT
 app = FastAPI()
 
 
 # Initialize Redis connection
-redis_client = Redis(host="localhost", port=6379, db=7)
+redis_client = Redis(host=REDIS_HOST, port=REDIS_PORT, db=7)
 
 
 @app.get("/ping")
