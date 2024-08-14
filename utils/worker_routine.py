@@ -12,7 +12,11 @@ def run_worker_routine():
         # Remove duplicates
         # Unique articles are a list of article URLs
         unique_articles = remove_db_duplicates(scraped_articles)
+        # iterator = 0
         for article_url in unique_articles:
+            # iterator += 1
+            # if iterator == 5:
+            #     break
             # Scrap each article
             news_source = scraped_articles[article_url]["source"]
             scraped_article = get_scraped_article(article_url, news_source)

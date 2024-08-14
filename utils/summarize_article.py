@@ -12,10 +12,10 @@ SAMPLE_SUMMARY = not (
 
 def summarize_article(content):
     if SAMPLE_SUMMARY:
-        return "A sample summary"
+        return {"summary": "A sample summary"}
     # Summarize an article using article-summary-service
     response = requests.post(
-        f"{summarizer_address}/{summarize_endpoint}", json={"content": content}
+        f"{summarizer_address}/{summarize_endpoint}", json={"text": content}
     )
     if response.status_code == 200:
         return response.json()

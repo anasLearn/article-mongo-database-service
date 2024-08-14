@@ -4,4 +4,4 @@ This is a tool to automatically update the database of summarized articles
 
 ## Prerequisites
 
-Python 3.9 or newer
+Python 3.9

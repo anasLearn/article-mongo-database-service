@@ -1,5 +1,5 @@
 from pydantic import BaseModel, AnyUrl
-from typing import List, Optional
+from typing import List, Optional, Dict
 from datetime import datetime
 
 
@@ -15,7 +15,7 @@ class ArticleModel(BaseModel):
     city: Optional[str]
     # # source: NewspaperModel
     source: str
-    summary: str
+    summary: Dict
 
 
 def convert_article_to_pydantic(article):

@@ -5,6 +5,7 @@ from mongoengine import (
     ReferenceField,
     ListField,
     DateTimeField,
+    DictField
 )
 from .topic import Topic
 from .newspaper import Newspaper
@@ -23,7 +24,7 @@ class Article(Document):
     city = ReferenceField(City, required=False)
     # TODO: source = ReferenceField(Newspaper, required=True)
     source = StringField(required=True)
-    summary = StringField(required=True)
+    summary = DictField(required=True)
 
     # Define indexes
     meta["indexes"] = [
