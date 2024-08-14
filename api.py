@@ -1,14 +1,11 @@
 import json
-import os
 from typing import List
-
-from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 import uvicorn
 from redis.asyncio import Redis
 import redis.exceptions as redis_exceptions
 
-from scheduler.worker_routine import run_worker_routine
+from utils.worker_routine import run_worker_routine
 from utils.db_utils import get_100_articles_from_db
 from models.pydantic_models import (
     ArticleModel,
@@ -18,10 +15,8 @@ from models.pydantic_models import (
 
 import logging
 
-load_dotenv()
+from globals import HOST, PORT, UPDATE_DB_ENDPOINT
 app = FastAPI()
-HOST = os.environ.get("HOST", "localhost")
-PORT = int(os.environ.get("PORT", "5030"))
 
 
 # Initialize Redis connection
@@ -34,14 +29,19 @@ async def ping():
 
 
 # Create the /update_db endpoint
-@app.post("/update-db")
-def update_db():
+@app.get(f"/{UPDATE_DB_ENDPOINT}")
+async def update_db(request: Request):
     """
-    Update the contents of the article database from the newspaper websites
+    Update the contents of the article database from the newspaper websites.
+    Only allowed if the requests is from the localhost
 
     Returns:
-
+        dict: A message indicating the result of the update operation.
     """
+    client_host = request.client.host
+    if client_host != "127.0.0.1" and client_host != "localhost":
+        raise HTTPException(status_code=403, detail="Access denied. Only local requests are allowed.")
+
     try:
         result = run_worker_routine()
         return {"message": result}

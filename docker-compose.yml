@@ -6,6 +6,7 @@ services:
       - "27017:27017"
     volumes:
       - mongodbdata:/data/db
+      - mongodbconfig:/data/configdb
 
   redis:
     image: redis
@@ -17,14 +18,18 @@ services:
     restart: unless-stopped
 
   celery:
-    image: db-handler-fastapi-image
-    container_name: celery-worker-container
+    build:
+      context: .
+      dockerfile: celery-scheduler/Dockerfile-celery  # Path to your Dockerfile
+    image: celery-image
+    container_name: celery-container
     working_dir: /app
-    volumes:
-      - .:/app  # Mount the project directory into the container
-    command: celery -A scheduler.tasks worker --beat --concurrency=1 --pool=solo
+    command: celery -A celery-scheduler.tasks worker --beat --concurrency=1 --pool=solo
+    env_file:
+      - .env
     depends_on:
       - api
+    network_mode: "service:api"
     restart: unless-stopped
 
   api:
@@ -45,5 +50,5 @@ services:
 
 volumes:
   mongodbdata:
+  mongodbconfig:
   redis-data:
-
