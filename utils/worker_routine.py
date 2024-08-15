@@ -1,7 +1,10 @@
+import random
+
 from utils.get_articles import get_latest_articles, get_scraped_article
 from utils.db_utils import remove_db_duplicates, write_to_database, get_topics_dict
 from utils.summarize_article import summarize_article
 from utils.format_datetime import format_timestamp
+from globals import CELERY_FREQUENCY
 
 
 def run_worker_routine():
@@ -12,12 +15,11 @@ def run_worker_routine():
         # Remove duplicates
         # Unique articles are a list of article URLs
         unique_articles = remove_db_duplicates(scraped_articles)
-        # iterator = 0
-        for article_url in unique_articles:
-            # iterator += 1
-            # if iterator == 5:
-            #     break
+
+        if CELERY_FREQUENCY == "quick":
+            unique_articles = random.choices(unique_articles, k=5)
             
+        for article_url in unique_articles:
             # Scrap each article
             news_source = scraped_articles[article_url]["source"]
             scraped_article = get_scraped_article(article_url, news_source)
