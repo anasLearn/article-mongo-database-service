@@ -2,10 +2,14 @@ services:
   mongodb:
     image: mongo
     container_name: article-mongo-database-container
+    env_file:
+      - .env
+    ports:
+      - "${PORT}:${PORT}"
+      - "27017:27017"
     volumes:
       - mongodbdata:/data/db
       - mongodbconfig:/data/configdb
-    network_mode: "service:api"
     restart: unless-stopped
 
   redis:
@@ -13,7 +17,7 @@ services:
     container_name: redis-server-container
     volumes:
       - redis-data:/data
-    network_mode: "service:api"
+    network_mode: "service:mongodb"
     restart: unless-stopped
 
   celery:
@@ -28,7 +32,7 @@ services:
       - .env
     depends_on:
       - api
-    network_mode: "service:api"
+    network_mode: "service:mongodb"
     restart: unless-stopped
 
   api:
@@ -41,12 +45,11 @@ services:
     container_name: db-handler-fastapi-container
     env_file:
       - .env
-    ports:
-      - "${PORT}:${PORT}"
-      - "27017:27017"
     depends_on:
       - mongodb
       - redis
+    network_mode: "service:mongodb"
+    restart: unless-stopped
 
 volumes:
   mongodbdata:
